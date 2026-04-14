@@ -3,7 +3,7 @@ import pandas as pd
 from gtts import gTTS
 import tempfile
 
-st.title("📚 Vocabulario Interactivo")
+st.title("Vocabulario Interactivo")
 
 url = "https://docs.google.com/spreadsheets/d/1rc3eytRj9tKgX0GkP5qj6xQx4S2iTlN1/export?format=csv&gid=888573341"
 
@@ -31,29 +31,29 @@ for i, row in df.iterrows():
     translation = row.get("Translation", "")
     phonetic = row.get("Phonetic", "")
     example = row.get("Example", "")
-    image = row.get("Image", "")
     word_family = row.get("Word Family", "")
     etymology = row.get("Etymology", "")
 
     if word:
         st.subheader(word)
 
-    st.write(f"📖 **Meaning:** {meaning}")
-    st.write(f"🌍 **Translation:** {translation}")
-    st.write(f"🔊 **Phonetic:** {phonetic}")
-    st.write(f"💬 **Example:** {example}")
+    if meaning:
+        st.write("Meaning:", meaning)
 
-    # 👉 NUEVO: Word Family
+    if translation:
+        st.write("Translation:", translation)
+
+    if phonetic:
+        st.write("Phonetic:", phonetic)
+
+    if example:
+        st.write("Example:", example)
+
     if word_family:
-        st.write(f"🧩 **Word Family:** {word_family}")
+        st.write("Word Family:", word_family)
 
-    # 👉 NUEVO: Etymology
     if etymology:
-        st.write(f"📜 **Etymology:** {etymology}")
+        st.write("Etymology:", etymology)
 
-    # 👉 Imagen (opcional)
-    if image:
-        st.image(image, width=150)
-
-    if st.button("🔊 Pronunciar", key=i):
+    if st.button("Pronounce", key=i):
         play_audio(word)
