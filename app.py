@@ -15,7 +15,7 @@ df = pd.read_csv(
 
 df.columns = df.columns.str.strip()
 
-st.write("Columnas detectadas:", df.columns)
+st.write("Recursos", df.columns)
 
 def play_audio(word):
     tts = gTTS(word, lang="en")
