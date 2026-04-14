@@ -8,40 +8,35 @@ st.title("📚 Vocabulario Interactivo")
 url = "https://docs.google.com/spreadsheets/d/1rc3eytRj9tKgX0GkP5qj6xQx4S2iTlN1/export?format=csv&gid=888573341"
 df = pd.read_csv(url)
 
-# Ruta base del proyecto (IMPORTANTE para evitar errores)
+# Ruta base del proyecto
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# DEBUG opcional (puedes borrarlo después)
+st.write("Columnas detectadas:", df.columns)
 
 for index, row in df.iterrows():
     st.markdown("---")
-    
-    col1, col2 = st.columns([1, 2])
 
-    # ------------------ IMAGEN ------------------
-    with col1:
-        img_file = str(row["Image"]).strip()
-        img_path = os.path.join(BASE_DIR, "images", img_file)
+    st.subheader(str(row.get("Word", "")))
+    st.write(row.get("Meaning", ""))
+    st.write(row.get("Translation", ""))
+    st.write(row.get("Phonetic", ""))
+    st.write(row.get("Example", ""))
 
-        if os.path.exists(img_path):
-            st.image(img_path, width=150)
-        else:
-            st.warning(f"⚠️ Imagen no encontrada: {img_file}")
+    # ------------------ AUDIO ------------------
+    audio_value = row.get("Audio")
 
-    # ------------------ TEXTO + AUDIO ------------------
-    with col2:
-        st.subheader(str(row["Word"]))
-        st.write(row["Meaning"])
-        st.write(row["Translation"])
-        st.write(row["Phonetic"])
-        st.write(row["Example"])
+    if pd.notna(audio_value):
+        audio_file = str(audio_value).strip()
+        audio_file = " ".join(audio_file.split())  # limpia espacios dobles
 
-        # LIMPIEZA del nombre del archivo (clave para mayúsculas y espacios)
-        audio_file = str(row["Audio"]).strip()
         audio_path = os.path.join(BASE_DIR, "audio", audio_file)
 
-        # DEBUG visual
         st.caption(f"🔍 Buscando audio: {audio_file}")
 
         if os.path.exists(audio_path):
             st.audio(audio_path)
         else:
             st.error(f"❌ No se encontró el audio: {audio_file}")
+    else:
+        st.warning("⚠️ No hay audio para esta palabra")
