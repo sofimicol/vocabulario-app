@@ -1,42 +1,48 @@
 import streamlit as st
 import pandas as pd
-import os
+from gtts import gTTS
+import tempfile
 
+# ------------------ CONFIG ------------------
 st.title("📚 Vocabulario Interactivo")
 
-# URL de tu Google Sheets
 url = "https://docs.google.com/spreadsheets/d/1rc3eytRj9tKgX0GkP5qj6xQx4S2iTlN1/export?format=csv&gid=888573341"
-df = pd.read_csv(url)
 
-# Ruta base del proyecto
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# FIX encoding (evita PoblaciÃ³n, EstadÃ­stico, etc.)
+df = pd.read_csv(url, encoding="utf-8")
 
-# DEBUG opcional (puedes borrarlo después)
+# ------------------ FUNCIÓN AUDIO ------------------
+def play_audio(word):
+    tts = gTTS(text=word, lang="en")
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+    tts.save(temp_file.name)
+    st.audio(temp_file.name)
+
+# ------------------ DEBUG ------------------
 st.write("Columnas detectadas:", df.columns)
 
+# ------------------ APP ------------------
 for index, row in df.iterrows():
     st.markdown("---")
 
-    st.subheader(str(row.get("Word", "")))
-    st.write(row.get("Meaning", ""))
-    st.write(row.get("Translation", ""))
-    st.write(row.get("Phonetic", ""))
-    st.write(row.get("Example", ""))
+    word = str(row.get("Word", "")).strip()
+    meaning = row.get("Meaning", "")
+    translation = row.get("Translation", "")
+    phonetic = row.get("Phonetic", "")
+    example = row.get("Example", "")
 
-    # ------------------ AUDIO ------------------
-    audio_value = row.get("Audio")
+    # WORD
+    st.subheader(word)
 
-    if pd.notna(audio_value):
-        audio_file = str(audio_value).strip()
-        audio_file = " ".join(audio_file.split())  # limpia espacios dobles
+    # CONTENIDO
+    st.write(meaning)
+    st.write(translation)
+    st.write(phonetic)
+    st.write(example)
 
-        audio_path = os.path.join(BASE_DIR, "audio", audio_file)
-
-        st.caption(f"🔍 Buscando audio: {audio_file}")
-
-        if os.path.exists(audio_path):
-            st.audio(audio_path)
+    # ------------------ AUDIO BUTTON ------------------
+    if st.button(f"🔊 Pronunciar", key=index):
+        if word:
+            play_audio(word)
         else:
-            st.error(f"❌ No se encontró el audio: {audio_file}")
-    else:
-        st.warning("⚠️ No hay audio para esta palabra")
+            st.warning("No hay palabra para pronunciar")
