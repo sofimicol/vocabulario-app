@@ -3,6 +3,19 @@ import pandas as pd
 from gtts import gTTS
 import tempfile
 
+# 🎨 FONDO ROSA CLARO
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #FFF1F6;
+        color: black;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.title("Vocabulario Interactivo")
 
 url = "https://docs.google.com/spreadsheets/d/1rc3eytRj9tKgX0GkP5qj6xQx4S2iTlN1/export?format=csv&gid=888573341"
