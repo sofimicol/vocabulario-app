@@ -31,14 +31,29 @@ for i, row in df.iterrows():
     translation = row.get("Translation", "")
     phonetic = row.get("Phonetic", "")
     example = row.get("Example", "")
+    image = row.get("Image", "")
+    word_family = row.get("Word Family", "")
+    etymology = row.get("Etymology", "")
 
     if word:
         st.subheader(word)
 
-    st.write(meaning)
-    st.write(translation)
-    st.write(phonetic)
-    st.write(example)
+    st.write(f"📖 **Meaning:** {meaning}")
+    st.write(f"🌍 **Translation:** {translation}")
+    st.write(f"🔊 **Phonetic:** {phonetic}")
+    st.write(f"💬 **Example:** {example}")
+
+    # 👉 NUEVO: Word Family
+    if word_family:
+        st.write(f"🧩 **Word Family:** {word_family}")
+
+    # 👉 NUEVO: Etymology
+    if etymology:
+        st.write(f"📜 **Etymology:** {etymology}")
+
+    # 👉 Imagen (opcional)
+    if image:
+        st.image(image, width=150)
 
     if st.button("🔊 Pronunciar", key=i):
         play_audio(word)
