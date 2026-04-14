@@ -16,7 +16,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("Glosary")
+st.title("Glossary")
 
 url = "https://docs.google.com/spreadsheets/d/1rc3eytRj9tKgX0GkP5qj6xQx4S2iTlN1/export?format=csv&gid=888573341"
 
